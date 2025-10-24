@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './utils/db.js';
+import { validateEnv, config } from './utils/config.js';
 import authRoutes from './routes/authRoutes.js';
 import songRoutes from './routes/songRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
@@ -14,16 +15,43 @@ import proxyRoutes from './routes/proxyRoutes.js';
 // Load environment variables
 dotenv.config();
 
+// Validate environment variables
+validateEnv();
+
 // Initialize Express app
 const app = express();
 
 // Connect to MongoDB
 connectDB();
 
+// Configure CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  config.cors.clientUrl,
+  ...config.cors.allowedOrigins
+];
+
+// Filter out undefined values and duplicates
+const filteredOrigins = [...new Set(allowedOrigins.filter(Boolean))];
+
+console.log('🔐 Allowed CORS origins:', filteredOrigins);
+
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', process.env.CLIENT_URL].filter(Boolean),
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (filteredOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
@@ -100,14 +128,15 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = config.server.port;
 
 app.listen(PORT, () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log(`🎵 Dhunn Server Running`);
-  console.log(`🚀 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🚀 Environment: ${config.server.nodeEnv}`);
   console.log(`📡 Port: ${PORT}`);
   console.log(`🌐 URL: http://localhost:${PORT}`);
+  console.log(`🔐 CORS: ${filteredOrigins.length} origins allowed`);
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 });
 

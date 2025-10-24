@@ -60,15 +60,8 @@ const SongCard = ({ song, showAddToPlaylist = false, onAddToPlaylist }) => {
 
   const handleFavorite = async (e) => {
     e.stopPropagation();
-    
-    // Prompt to login if not authenticated
-    if (!user) {
-      alert('Please login to save your favorite songs');
-      return;
-    }
-    
-    if (!lovedPlaylistId) {
-      console.log('Loved playlist not ready yet');
+    if (!user || !lovedPlaylistId) {
+      console.log('Cannot toggle favorite:', { user: !!user, lovedPlaylistId });
       return;
     }
 
@@ -137,7 +130,7 @@ const SongCard = ({ song, showAddToPlaylist = false, onAddToPlaylist }) => {
         <button
           onClick={handleFavorite}
           className="p-2 hover:bg-dark-600 rounded-full transition-colors"
-          title={!user ? 'Login to add favorites' : isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         >
           {isFavorite ? (
             <FaHeart className="text-primary-500" />
@@ -146,18 +139,16 @@ const SongCard = ({ song, showAddToPlaylist = false, onAddToPlaylist }) => {
           )}
         </button>
         
-        {user && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToPlaylist?.(song);
-            }}
-            className="p-2 hover:bg-dark-600 rounded-full transition-colors"
-            title="Add to playlist"
-          >
-            <FaPlus className="text-gray-400 hover:text-white" />
-          </button>
-        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToPlaylist?.(song);
+          }}
+          className="p-2 hover:bg-dark-600 rounded-full transition-colors"
+          title="Add to playlist"
+        >
+          <FaPlus className="text-gray-400 hover:text-white" />
+        </button>
       </div>
     </div>
   );

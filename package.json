@@ -1,0 +1,29 @@
+{
+  "name": "dhunn",
+  "version": "1.0.0",
+  "description": "Dhunn - Instrumental Music Streaming Platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "start": "cd server && npm start",
+    "build": "cd client && npm run build",
+    "build:prod": "cd client && npm run build:prod",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "clean": "rm -rf node_modules server/node_modules client/node_modules"
+  },
+  "keywords": [
+    "music",
+    "streaming",
+    "instrumental",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

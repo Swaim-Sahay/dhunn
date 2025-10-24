@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaPlus, FaMusic, FaLock } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaPlus, FaMusic } from 'react-icons/fa';
 import { playlistsAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { getErrorMessage } from '../utils/helpers';
@@ -9,7 +8,7 @@ import CreatePlaylistModal from '../components/CreatePlaylistModal';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Library = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,8 +17,6 @@ const Library = () => {
   useEffect(() => {
     if (user) {
       fetchPlaylists();
-    } else {
-      setLoading(false);
     }
   }, [user]);
 
@@ -52,35 +49,6 @@ const Library = () => {
   const handlePlaylistCreated = (newPlaylist) => {
     setPlaylists([newPlaylist, ...playlists]);
   };
-
-  // Show login prompt if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] fade-in">
-        <div className="text-center max-w-md">
-          <FaLock className="text-6xl text-gray-600 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold mb-4">Library Access Required</h2>
-          <p className="text-gray-400 mb-8">
-            Sign in to create playlists and save your favorite tracks
-          </p>
-          <div className="flex items-center justify-center space-x-4">
-            <Link
-              to="/login"
-              className="px-6 py-3 bg-dark-800 hover:bg-dark-700 rounded-lg transition-colors font-semibold"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-6 py-3 bg-gradient-primary rounded-lg hover:opacity-90 transition-opacity font-semibold"
-            >
-              Sign Up
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (loading) {
     return <LoadingSpinner fullScreen />;

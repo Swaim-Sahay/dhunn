@@ -1,13 +1,20 @@
 import axios from 'axios';
 
-const API_URL = '/api';
+// Get API URL from environment variables
+// In development: uses Vite proxy (/api) if VITE_API_URL is not set
+// In production: uses the full backend URL from VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+console.log('🌐 API URL:', API_URL);
+console.log('🔧 Environment:', import.meta.env.MODE);
 
 // Create axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true // Enable credentials for CORS
 });
 
 // Add token to requests

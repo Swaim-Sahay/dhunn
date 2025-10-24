@@ -1,18 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaMusic, FaEnvelope, FaLock } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  const { login } = useAuth();
   
   const [formData, setFormData] = useState({
     email: '',
@@ -123,16 +116,6 @@ const Login = () => {
           <Link to="/signup" className="text-primary-500 hover:text-primary-400 font-semibold">
             Sign Up
           </Link>
-        </div>
-
-        {/* Continue as Guest */}
-        <div className="text-center">
-          <button
-            onClick={() => navigate('/')}
-            className="text-gray-400 hover:text-white text-sm underline"
-          >
-            Continue as Guest
-          </button>
         </div>
       </div>
     </div>
