@@ -25,34 +25,14 @@ const app = express();
 connectDB();
 
 // Configure CORS
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  config.cors.clientUrl,
-  ...config.cors.allowedOrigins
-];
-
-// Filter out undefined values and duplicates
-const filteredOrigins = [...new Set(allowedOrigins.filter(Boolean))];
-
-console.log('🔐 Allowed CORS origins:', filteredOrigins);
-
-// Middleware
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    
-    if (filteredOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+// Allow requests with no origin (server-to-server, curl). Otherwise only allow the single configured origin.
+const corsOptions = {
+  origin: CORS_ORIGIN,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  optionsSuccessStatus: 200,
+}
+// Middleware
+app.use(cors(corsOptions))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
