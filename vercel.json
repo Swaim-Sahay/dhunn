@@ -8,9 +8,6 @@
     {
       "src": "client/vite.config.js",
       "use": "@vercel/static-build",
-      "options": {
-        "outputDirectory": "client/dist"
-      }
     }
   ],
   "rewrites": [
