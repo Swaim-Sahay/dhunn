@@ -36,33 +36,25 @@ function App() {
                           <Route
                             path="/"
                             element={
-                              <ProtectedRoute>
                                 <Home />
-                              </ProtectedRoute>
                             }
                           />
                           <Route
                             path="/search"
                             element={
-                              <ProtectedRoute>
                                 <Search />
-                              </ProtectedRoute>
                             }
                           />
                           <Route
                             path="/library"
                             element={
-                              <ProtectedRoute>
                                 <Library />
-                              </ProtectedRoute>
                             }
                           />
                           <Route
                             path="/playlist/:id"
                             element={
-                              <ProtectedRoute>
                                 <Playlist />
-                              </ProtectedRoute>
                             }
                           />
                         </Routes>

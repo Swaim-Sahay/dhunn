@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { FaMusic, FaUserCircle } from 'react-icons/fa';
+import { FaMusic, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-800">
@@ -17,36 +17,35 @@ const Navbar = () => {
 
           {/* User Menu */}
           <div className="flex items-center space-x-4">
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-300 hidden sm:block">
-                  Hi, {user.username}
-                </span>
-                <div className="flex items-center space-x-2">
-                  <FaUserCircle className="text-2xl text-primary-500" />
-                  <button
-                    onClick={logout}
-                    className="px-4 py-2 text-sm bg-dark-800 hover:bg-dark-700 rounded-lg transition-colors"
-                  >
-                    Logout
-                  </button>
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center space-x-2 text-gray-300">
+                  <FaUserCircle className="text-2xl" />
+                  <span className="font-medium">{user?.name || user?.email}</span>
                 </div>
-              </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center space-x-2 px-4 py-2 bg-dark-800 hover:bg-dark-700 rounded-lg transition-colors"
+                >
+                  <FaSignOutAlt />
+                  <span>Logout</span>
+                </button>
+              </>
             ) : (
-              <div className="flex items-center space-x-3">
+              <>
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm hover:text-primary-400 transition-colors"
+                  className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 text-sm bg-gradient-primary rounded-lg hover:opacity-90 transition-opacity"
+                  className="px-4 py-2 bg-gradient-primary rounded-lg hover:opacity-90 transition-opacity font-semibold"
                 >
                   Sign Up
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </div>

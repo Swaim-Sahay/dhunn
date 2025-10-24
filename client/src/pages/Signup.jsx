@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaMusic, FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { signup } = useAuth();
+  const { signup, isAuthenticated } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
   
   const [formData, setFormData] = useState({
     username: '',
@@ -175,6 +182,16 @@ const Signup = () => {
           <Link to="/login" className="text-primary-500 hover:text-primary-400 font-semibold">
             Login
           </Link>
+        </div>
+
+        {/* Continue as Guest */}
+        <div className="text-center">
+          <button
+            onClick={() => navigate('/')}
+            className="text-gray-400 hover:text-white text-sm underline"
+          >
+            Continue as Guest
+          </button>
         </div>
       </div>
     </div>
